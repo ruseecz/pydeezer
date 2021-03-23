@@ -344,9 +344,9 @@ class Deezer(DeezerPy):
 
         if not progress_handler:
             progress_handler = DefaultProgressHandler()
-
-        progress_handler.initialize(data_iter, title, quality_key, total_filesize,
-                                    chunk_size, track_id=track["id"])
+        if show_messages:
+            progress_handler.initialize(data_iter, title, quality_key, total_filesize,
+                                        chunk_size, track_id=track["id"])
 
         with open(download_path, "wb") as f:
             f.seek(0)
@@ -358,8 +358,9 @@ class Deezer(DeezerPy):
                     f.write(chunk)
                 elif len(chunk) < chunk_size:
                     f.write(chunk)
-                    progress_handler.update(
-                        track_id=track["id"], current_chunk_size=current_chunk_size)
+                    if show_messages:
+                        progress_handler.update(
+                            track_id=track["id"], current_chunk_size=current_chunk_size)
                     break
                 else:
                     cipher = Cipher(algorithms.Blowfish(blowfish_key),
@@ -394,7 +395,7 @@ class Deezer(DeezerPy):
 
         progress_handler.close(
             track_id=track["id"], total_filesize=total_filesize)
-
+        return download_path
     def get_tracks(self, track_ids):
         """Gets the list of the tracks that corresponds with the given {track_ids}
 
