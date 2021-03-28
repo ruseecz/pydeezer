@@ -136,7 +136,7 @@ class Deezer(DeezerPy):
 
         title = track.get("title")
 
-        if "version" in track and track["version"] != "":
+        if "version" in track and (track["version"] != "" and track["version"] != None):
             title += " " + track["version"]
 
         def should_include_featuring():
